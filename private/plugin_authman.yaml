@@ -1,0 +1,128 @@
+plugin_authman_authorization:
+    - aktion:      activate
+      objekt:      plugin_authman
+      description: Activate Authorizations. This copies the current state of authman to the respective auth tables.
+    - aktion:      deactivate
+      objekt:      plugin_authman
+      description: Deactivate Authorizations. This removes permissions added by authman from the respective auth tables.
+    - aktion:      create
+      objekt:      plugin_authman_authorization
+      description: Create new Authorization.
+    - aktion:      display
+      objekt:      plugin_authman_authorization
+      description: Display Authorization.
+    - aktion:      edit
+      objekt:      plugin_authman_authorization
+      description: Edit Authorization.
+    - aktion:      delete
+      objekt:      plugin_authman_authorization
+      description: Delete Authorization.
+    - aktion:      create
+      objekt:      plugin_authman_role
+      description: Create new Role.
+    - aktion:      display
+      objekt:      plugin_authman_role
+      description: Display Role.
+    - aktion:      edit
+      objekt:      plugin_authman_role
+      description: Edit Role.
+    - aktion:      delete
+      objekt:      plugin_authman_role
+      description: Delete Role.
+    - aktion:      assign
+      objekt:      plugin_authman_authorization
+      description: Assign Authorization to Role.
+    - aktion:      assign
+      objekt:      plugin_authman_role
+      description: Assign Role to Role.
+    - aktion:      create
+      objekt:      plugin_authman_user
+      description: Create new User.
+    - aktion:      display
+      objekt:      plugin_authman_user
+      description: Display User.
+    - aktion:      edit
+      objekt:      plugin_authman_user
+      description: Edit User.
+    - aktion:      delete
+      objekt:      plugin_authman_user
+      description: Delete User.
+    - aktion:      assign
+      objekt:      plugin_authman_user
+      description: Assign User to Role.
+    - aktion:      confirm
+      objekt:      plugin_authman_user
+      description: Confirm pending User Registration.
+    - aktion:      lock
+      objekt:      plugin_authman_user
+      description: Lock User.
+    - aktion:      unlock
+      objekt:      plugin_authman_user
+      description: Unlock User.
+
+plugin_authman_role:
+    - role:        plugin_authman_developer
+      description: The developer creates Authorizations.
+      plugin_authman_permission:
+        - aktion: display
+          objekt: plugin_authman_authorization
+        - aktion: create
+          objekt: plugin_authman_authorization
+        - aktion: edit
+          objekt: plugin_authman_authorization
+        - aktion: delete
+          objekt: plugin_authman_authorization
+    - role:        plugin_authman_manager
+      description: The manager creates Groups and assigns Authorizations to them.
+      plugin_authman_permission:
+        - aktion: display
+          objekt: plugin_authman_authorization
+        - aktion: display
+          objekt: plugin_authman_role
+        - aktion: create
+          objekt: plugin_authman_role
+        - aktion: edit
+          objekt: plugin_authman_role
+        - aktion: delete
+          objekt: plugin_authman_role
+        - aktion: assign
+          objekt: plugin_authman_authorization
+        - aktion: assign
+          objekt: plugin_authman_role
+    - role:        plugin_authman_activator
+      description: The activator activates the new definitions.
+      plugin_authman_permission:
+        - aktion: activate
+          objekt: plugin_authman
+        - aktion: deactivate
+          objekt: plugin_authman
+    - role:        plugin_authman_administrator
+      description: The Administrator maintains Users and assigns them to Roles.
+      plugin_authman_permission:
+        - aktion: display
+          objekt: plugin_authman_authorization
+        - aktion: display
+          objekt: plugin_authman_role
+        - aktion: display
+          objekt: plugin_authman_user
+        - aktion: create
+          objekt: plugin_authman_user
+        - aktion: edit
+          objekt: plugin_authman_user
+        - aktion: delete
+          objekt: plugin_authman_user
+        - aktion: assign
+          objekt: plugin_authman_user
+        - aktion: confirm
+          objekt: plugin_authman_user
+        - aktion: lock
+          objekt: plugin_authman_user
+        - aktion: unlock
+          objekt: plugin_authman_user
+    - role:        plugin_authman_root
+      description: The authman superuser can execute all authman activities.
+      plugin_authman_subrole:
+        - plugin_authman_developer
+        - plugin_authman_manager
+        - plugin_authman_activator
+        - plugin_authman_administrator

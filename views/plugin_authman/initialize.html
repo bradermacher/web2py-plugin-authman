@@ -1,0 +1,10 @@
+{{extend 'layout.html'}}
+<h1>Authman Initialization Log</h1>
+<table>
+    {{for line in result:}}
+        <tr>
+            <td valign="top" style="font-weight: {{=line[0]}};">{{=line[1]}}</td>
+        </tr>
+    {{pass}}
+</table>
+<p><a href="{{=URL('index')}}">Back</a></p>

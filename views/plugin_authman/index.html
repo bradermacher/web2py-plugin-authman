@@ -1,0 +1,30 @@
+{{extend 'layout.html'}}
+<h1>authman Plugin</h1>
+<p>This plugin provides improved capabilities to manage authorizations. Specifially it includes:</p>
+<ul><li>Authorizations independent of actual Permission, allowing a developer to define an Authorization without prior knowledge of organization structure.</li>
+<li>Support for subroles. A Role can include other roles, any user will be assigned the subroles in addition to the main role.</li>
+<li>Explicit Activation. All changes do not impact existing authorization until activated.</li>
+</ul>
+
+{{if db(db.plugin_authman_authorization).isempty():}}
+    {{if auth.has_membership(role='root'):}}
+        <p><a href="{{=URL('initialize')}}">Initialize</a></p>
+    {{else:}}
+        <p>Must be member of role 'root' to initialize.</p>
+    {{pass}}
+{{else:}}
+    {{if auth.has_permission('activate', 'plugin_authman'):}}
+		<p><a href="{{=URL('activate')}}">Activate</a></p>
+	{{pass}}
+  {{if auth.has_permission('display', 'plugin_authman_user'):}}
+		<p><a href="{{=URL('user')}}">User Management</a></p>
+	{{pass}}
+  {{if auth.has_permission('display', 'plugin_authman_role'):}}
+    <p><a href="{{=URL('role')}}">Role Management</a></p>
+  {{pass}}
+  {{if auth.has_permission('display', 'plugin_authman_authorization'):}}
+    <p><a href="{{=URL('authorization')}}">Authorization Management</a></p>
+  {{pass}}
+{{pass}}
+<hr>
+{{=data}}

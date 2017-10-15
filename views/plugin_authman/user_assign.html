@@ -1,0 +1,12 @@
+{{extend 'layout.html'}}
+<h1>Assign User to Roles</h1>
+<table>
+{{if hasattr(u, 'username'):}}
+	<tr><td>ID:</td><td>&nbsp;<b>{{=u.username}}</b></td></tr>
+{{pass}}
+<tr><td>User:</td><td>&nbsp;<b>{{=u.first_name}} {{=u.last_name}}</b></td></tr>
+<tr><td>Email:</td><td>&nbsp;<b>{{=u.email}}</b></td></tr>
+</table>
+<p>&nbsp;</p>
+{{=form}}
+<p><a href="{{=URL('user')}}">Back</a></p>
