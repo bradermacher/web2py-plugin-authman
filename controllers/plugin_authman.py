@@ -116,25 +116,28 @@ def initialize():
     if db(db.plugin_authman_authorization).isempty():
         from pickle import load
         from os.path import join as pathjoin
-        picklefile = pathjoin(pathjoin(request.folder, 'private'), 'plugin_authman.pickle')
+        from os import listdir
         authorization={}
         role={}
-        with open(picklefile) as f:
-            data = load(f)
-            for i in data['plugin_authman_authorization']:
-                authorization['%(aktion)s|%(objekt)s' % i] = db.plugin_authman_authorization.insert(aktion=i['aktion'], objekt=i['objekt'], description=i['description'])
-                result.append([400, 'Added authorization "%(aktion)s %(objekt)s".' % i])
-            for i in data['plugin_authman_role']:
-                role[i['role']] = db.plugin_authman_role.insert(role=i['role'], description=i['description'])
-                result.append([400, 'Added role "%s".' % i['role']])
-                if i.has_key('plugin_authman_permission'):
-                    for j in i['plugin_authman_permission']:
-                        db.plugin_authman_permission.insert(role_id=role[i['role']], authorization_id=authorization['%(aktion)s|%(objekt)s' % j])
-                        result.append([400, 'Granted "%s %s" to "%s".' % (j['aktion'], j['objekt'], i['role'])])
-                if i.has_key('plugin_authman_subrole'):
-                    for j in i['plugin_authman_subrole']:
-                        db.plugin_authman_subrole.insert(role_id=role[i['role']], subrole_id=role[j])
-                        result.append([400, 'Added role "%s" to "%s".' % (j, i['role'])])
+        for filename in listdir(pathjoin(request.folder, 'private')):
+            if filename.endswith('authman.pickle'):
+                picklefile = pathjoin(pathjoin(request.folder, 'private'), filename)
+                with open(picklefile) as f:
+                    data = load(f)
+                    for i in data['plugin_authman_authorization']:
+                        authorization['%(aktion)s|%(objekt)s' % i] = db.plugin_authman_authorization.insert(aktion=i['aktion'], objekt=i['objekt'], description=i['description'])
+                        result.append([400, 'Added authorization "%(aktion)s %(objekt)s".' % i])
+                    for i in data['plugin_authman_role']:
+                        role[i['role']] = db.plugin_authman_role.insert(role=i['role'], description=i['description'])
+                        result.append([400, 'Added role "%s".' % i['role']])
+                        if i.has_key('plugin_authman_permission'):
+                            for j in i['plugin_authman_permission']:
+                                db.plugin_authman_permission.insert(role_id=role[i['role']], authorization_id=authorization['%(aktion)s|%(objekt)s' % j])
+                                result.append([400, 'Granted "%s %s" to "%s".' % (j['aktion'], j['objekt'], i['role'])])
+                        if i.has_key('plugin_authman_subrole'):
+                            for j in i['plugin_authman_subrole']:
+                                db.plugin_authman_subrole.insert(role_id=role[i['role']], subrole_id=role[j])
+                                result.append([400, 'Added role "%s" to "%s".' % (j, i['role'])])
     else:
         result.append([700, 'Tables not empty. No entries added.'])
     # seed permission table so that root can activate
